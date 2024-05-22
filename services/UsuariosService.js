@@ -11,6 +11,8 @@ class UsuariosService  {
   async listaUsuarios(req, res) {
     console.log("-------------- listaUsuarios geral --------------------");
     const id_empresa = req.params.id_empresa;
+
+    console.log(id_empresa)
     const sql = `SELECT u.nome, u.email, u.telefone1, u.ativo FROM usuarios u where u.id_empresa = ${id_empresa}`;
     try {
       const rs = await pg.execute(sql);
@@ -212,6 +214,7 @@ class UsuariosService  {
               mensagem: "Autenticado com sucesso",
               id_empresa: results.rows[0].id_empresa,
               nome: results.rows[0].nome,
+              id_nivel: results.rows[0].id_nivel,
               token: token,
             };
             return res.status(200).send(response);
