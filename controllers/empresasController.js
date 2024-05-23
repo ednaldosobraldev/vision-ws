@@ -8,7 +8,7 @@ module.exports = (app) => {
       EmpresasService.listarEmpresas(req, res);
       //res.send("Rotas de atendimentos(GET)");
     });
-    app.get(base + `${url}/listar/:id_empresa`, login.opcional, (req, res) => {
+    app.put(base + `${url}/atualizar`, login.opcional, (req, res) => {
       EmpresasService.atualizarEmpresa(req, res);
       //res.send("Rotas de atendimentos(GET)");
     });

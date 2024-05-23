@@ -14,7 +14,7 @@ class EmpresaService {
       //const sql = "INSERT INTO atendimentos SET ?";
       const sql =
         "UPDATE empresas SET descricao_empresa = $1, razao = $2, fantasia = $3, cpf_cpnj = $4, ie = $5, cep = $6, rua = $7, numero = $8, bairro = $9, " +
-        "cidade = $10, uf = $11, telefone1 = $12, telefone2 = $13, ativo = $14, data_alt $ 15) " +
+        "cidade = $10, uf = $11, telefone1 = $12, telefone2 = $13, ativo = $14, data_alt = $15 " +
         "WHERE id_empresa = $16 ";
       const resultInsert = await pg.execute(sql, [
         empresa.descricao_empresa,
@@ -32,10 +32,10 @@ class EmpresaService {
         empresa.telefone2,
         empresa.ativo,
         data_alt,
-        id_empresa
+        empresa.id_empresa
       ]);
       const response = {
-        mensagem: "Empresa Cadastrada Com Sucesso",
+        mensagem: "Empresa Atualizada Com Sucesso",
         empresa_cadastrada: {
           id_empresa: resultInsert.rows[0].id_empresa,
           descricao_empresa: empresa.descricao_empresa,
@@ -58,11 +58,11 @@ class EmpresaService {
     const id_empresa = req.params.id_empresa;
     console.log("-------------- lista_empresas geral --------------------");
     let sqlListaEmpresas = "SELECT " +
-    "  * " +
+    " * " +
     "FROM " +
     "   empresas e " + 
     "WHERE " +
-    "e.id_empresa = $1"
+    "   e.id_empresa = $1"
     try {
       const rs = await pg.execute(sqlListaEmpresas, [id_empresa]);
       const linhas = rs.rows.length;
