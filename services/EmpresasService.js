@@ -32,7 +32,7 @@ class EmpresaService {
         empresa.telefone2,
         empresa.ativo,
         data_alt,
-        empresa.id_empresa
+        empresa.id_empresa,
       ]);
       const response = {
         mensagem: "Empresa Atualizada Com Sucesso",
@@ -49,24 +49,26 @@ class EmpresaService {
         .status(401)
         .send("tabela: " + error.table + " campo: " + error.column);
     }
-
   }
   async deletarEmpresa(req, res) {}
   async inativarEmpresa(req, res) {}
- 
+
   async listarEmpresas(req, res) {
     const id_empresa = req.params.id_empresa;
     console.log("-------------- lista_empresas geral --------------------");
-    let sqlListaEmpresas = "SELECT " +
-    " * " +
-    "FROM " +
-    "   empresas e " + 
-    "WHERE " +
-    "   e.id_empresa = $1"
+    let sqlListaEmpresas =
+      "SELECT " +
+      " id_empresa, descricao_empresa, razao, fantasia, cpf_cnpj, ie, cep, rua, numero, bairro, " +
+      "cidade, uf, telefone1, telefone2, ativo, TO_CHAR(data_cadastro, 'DD/MM/YYYY') AS data_cadastro, TO_CHAR(data_alt, 'DD/MM/YYYY') AS data_alt " +
+      "FROM " +
+      "   empresas e " +
+      "WHERE " +
+      "   e.id_empresa = $1";
+    console.log(sqlListaEmpresas);
     try {
       const rs = await pg.execute(sqlListaEmpresas, [id_empresa]);
       const linhas = rs.rows.length;
-      console.log()
+      console.log();
 
       if (linhas > 0) {
         const retorno = {
@@ -118,7 +120,7 @@ class EmpresaService {
     try {
       //const sql = "INSERT INTO atendimentos SET ?";
       const sql =
-        "INSERT INTO empresas (descricao_empresa, razao, fantasia, cpf_cpnj, ie, cep, rua, numero, bairro, " +
+        "INSERT INTO empresas (descricao_empresa, razao, fantasia, cpf_cnpj, ie, cep, rua, numero, bairro, " +
         "cidade, uf, telefone1, telefone2, ativo, data_cadastro, data_alt) " +
         "values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17) RETURNING id_empresa, descricao_empresa";
       const resultInsert = await pg.execute(sql, [
@@ -155,24 +157,23 @@ class EmpresaService {
         .send("tabela: " + error.table + " campo: " + error.column);
     }
   }
-  async desativarempresa(req, res) {
-    console.log(
-      "--------------------- DESATIVAR empresa --------------------"
-    );
+  async desativarEmpresa(req, res) {
+    console.log("--------------------- DESATIVAR empresa --------------------");
     let id_empresa = req.params.id;
     console.log("---------- id empresa passad back: " + id_empresa);
 
     try {
-      let sqlAtivo = "SELECT ativo FROM  WHERE id_empresa = $1";
+      let sqlAtivo = "SELECT ativo FROM empresas WHERE id_empresa = $1";
       let rsSqlAtivo = await pg.execute(sqlAtivo, [id_empresa]);
+      console.log(rsSqlAtivo);
+
       let linhasAtivo = rsSqlAtivo.rowCount;
       if (linhasAtivo > 0) {
         let rsAtivo = rsSqlAtivo.rows[0].ativo;
         console.log("rsAtivo encontrado: " + rsAtivo);
         rsAtivo = !rsAtivo;
 
-        let sqlUpdate =
-          "UPDATE empresas SET ativo = $1 WHERE id_empresa = $2";
+        let sqlUpdate = "UPDATE empresas SET ativo = $1 WHERE id_empresa = $2";
         let rsUpdate = await pg.execute(sqlUpdate, [rsAtivo, id_empresa]);
         let linhasUpdate = rsUpdate.rowCount;
         if (linhasUpdate > 0) {
@@ -207,7 +208,7 @@ class EmpresaService {
       "WHERE " +
       "     e.id_empresa = $1";
     try {
-      let rsFind = await pg.execute(sqlFind,  [id_empresa]);
+      let rsFind = await pg.execute(sqlFind, [id_empresa]);
 
       let linhasFind = rsFind.rowCount;
       if (linhasFind > 0) {
@@ -240,7 +241,7 @@ class EmpresaService {
     }
   }
   async retrocederRegistro(req, res) {}
-  async buscarEscolaPeloId(req, res){}
+  async buscarEscolaPeloId(req, res) {}
 }
 
 module.exports = new EmpresaService();

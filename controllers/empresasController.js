@@ -19,11 +19,11 @@ module.exports = (app) => {
     });
     app.post(base + `${url}/cadastrar`, login.opcional, (req, res) => {
       console.warn("------ escola controller post salvar -----------------");
-      EmpresasService.cadastrarEscola(req, res);
+      EmpresasService.cadastrarEmpresa(req, res);
     });
-    app.get(base + `${url}/desativarEscola/:id_escola`, login.opcional, (req, res) => {
-      console.warn("------ desativarEscola escola controller get  -----------------");
-      EmpresasService.desativarEscola(req, res);
+    app.put(base + `${url}/desativar-empresa/:id`, login.opcional, (req, res) => {
+      console.warn("------ desativarEmpresa empresa controller get  -----------------");
+      EmpresasService.desativarEmpresa(req, res);
     });
     app.get(base + `${url}/avancar_registro/:id_escola`, login.opcional, (req, res) => {
       console.warn("------ escola avancar_registro get  -----------------");
