@@ -6,13 +6,13 @@ const jwt = require("jsonwebtoken");
 const moment = require("moment");
 const saltRounds = 10;
 
-class UsuariosService  {
+class UsuariosService {
   //------------------------ ok 18/05/23 ---------------------------
   async listaUsuarios(req, res) {
     console.log("-------------- listaUsuarios geral --------------------");
     const id_empresa = req.params.id_empresa;
 
-    console.log(id_empresa)
+    console.log(id_empresa);
     const sql = `SELECT u.nome, u.email, u.telefone1, u.ativo FROM usuarios u where u.id_empresa = ${id_empresa}`;
     try {
       const rs = await pg.execute(sql);
@@ -117,8 +117,8 @@ class UsuariosService  {
     });
   }
   /*
-  ************************** SAVLAR USUARIO ********************
-  */
+   ************************** SAVLAR USUARIO ********************
+   */
 
   async salvarUsuario(usuario, res) {
     const data_cadastro = new moment().format("YYYY-MM-DD HH:mm:ss");
@@ -206,10 +206,10 @@ class UsuariosService  {
               },
               process.env.JWT_KEY,
               {
-                expiresIn: "1h",
+                // expiresIn: "1h",
+                expiresIn: "30m", // expira em 1 min
               }
             );
-            console.warn(token);
             const response = {
               mensagem: "Autenticado com sucesso",
               id_empresa: results.rows[0].id_empresa,
@@ -221,6 +221,7 @@ class UsuariosService  {
           } else {
             const response = {
               mensagem: "Falha na autenticação",
+              statusCode: 401,
             };
 
             return res.status(401).send(response);
